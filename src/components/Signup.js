@@ -1,26 +1,31 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { LOGIN_BG_LOGO, LOGIN_BG_URL } from "../utils/constants";
 import { Link } from "react-router-dom";
+import { useFormik } from "formik";
 
 const SignUp = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      password: "",
+      confirmPassword: "",
+      userType: "", // Set initial value to an empty string
+    },
+    onSubmit: (values) => {
+      // Handle form submission logic here
+      console.log(values);
+    },
+  });
   const [showPassword, setShowPassword] = useState(false);
-  const [userType, setUserType] = useState("");
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your signup logic here
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
     <div>
       <div className="relative">
-        {/* Background overlay */}
         <div className="absolute inset-0 bg-white opacity-60"></div>
-
-        {/* Background image */}
         <div
           className="bg-cover bg-center min-h-screen flex items-center justify-center"
           style={{ backgroundImage: `url(${LOGIN_BG_URL})` }}
@@ -36,55 +41,84 @@ const SignUp = () => {
                 serving people with delicious sweets and mouthwatering namkeen
               </h2>
             </div>
-
             <div className="md:w-1/2 px-8 md:px-16">
               <h2 className="font-bold text-2xl text-[#6A241C]">
                 Welcome to shanta
               </h2>
-
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className=""></div>
                 <input
                   className="p-2 mt-8 rounded-xl border-2 border-black"
                   type="text"
+                  name="firstName"
                   placeholder="First Name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
+                  value={values.firstName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                 />
                 <input
                   className="p-2 rounded-xl border-2 border-black"
                   type="text"
+                  name="lastName"
                   placeholder="Last Name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
+                  value={values.lastName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                 />
+                <div className="relative">
+                  <input
+                    className="p-2 rounded-xl border-2 border-black w-full"
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="Password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="black"
+                    className="bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
+                    viewBox="0 0 16 16"
+                    onClick={togglePasswordVisibility}
+                  >
+                    <path
+                      d={
+                        showPassword
+                          ? "M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"
+                          : "M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM4.5 8a3.5 3.5 0 1 0 7 0 3.5 3.5 0 0 0-7 0z"
+                      }
+                    />
+                    {showPassword && (
+                      <path
+                        d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"
+                        fillRule="evenodd"
+                      />
+                    )}
+                  </svg>
+                </div>
                 <input
                   className="p-2 rounded-xl border-2 border-black"
                   type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-                <input
-                  className="p-2 rounded-xl border-2 border-black"
-                  type="password"
+                  name="confirmPassword"
                   placeholder="Confirm Password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
+                  value={values.confirmPassword}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
                 />
                 <select
                   className="p-2 rounded-xl border-2 border-black"
-                  value={userType}
-                  onChange={(e) => setUserType(e.target.value)}
-                  required
+                  name="userType"
+                  value={values.userType}
+                  onChange={handleChange}
                 >
-                  <option value="">Select User</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                  <option value="" disabled>
+                    Select User
+                  </option>
+                  <option value="Manager">Manager</option>
+                  <option value="Employee">Employee</option>
                 </select>
                 <button
                   type="submit"
@@ -93,7 +127,6 @@ const SignUp = () => {
                   Sign Up
                 </button>
               </form>
-
               <div className="mt-3 text-xs flex justify-between items-center text-[#6A241C]">
                 <p>Already have an account?</p>
                 <Link to={"/"}>

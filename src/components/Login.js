@@ -1,11 +1,17 @@
-import React, { useState } from "react";
 import { LOGIN_BG_LOGO, LOGIN_BG_URL } from "../utils/constants";
 import { Link } from "react-router-dom";
+import { useFormik } from "formik";
+import { useState } from "react";
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
+  const { values, handleBlur, handleChange } = useFormik({
+    initialValues: {
+      username: "",
+      password: "",
+    },
+  });
 
+  const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -44,18 +50,22 @@ const Login = () => {
               <form action="" className="flex flex-col gap-4">
                 <input
                   className="p-2 mt-8 rounded-xl border-2 border-black "
+                  value={values.username}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  id="username"
                   type="text"
                   placeholder="Username"
-                  required
                 />
                 <div className="relative">
                   <input
                     className="p-2 rounded-xl border-2 border-black w-full"
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
+                    id="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -82,7 +92,9 @@ const Login = () => {
                   </svg>
                 </div>
                 <div className="text-xs py-2 text-black">
-                  <Link to={""}>Forgot your password?</Link>
+                  <Link to={"/forgot-password"}>
+                    <button>Forgot your password?</button>
+                  </Link>
                 </div>
                 <button className="bg-[#6A241C] rounded-xl text-white py-2 hover:scale-105 duration-300">
                   Login
