@@ -2,14 +2,20 @@ import { LOGIN_BG_LOGO, LOGIN_BG_URL } from "../utils/constants";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import { useState } from "react";
+import validationSchema from "../utils/validationSchema";
 
 const Login = () => {
-  const { values, handleBlur, handleChange } = useFormik({
-    initialValues: {
-      username: "",
-      password: "",
-    },
-  });
+  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
+    useFormik({
+      initialValues: {
+        username: "",
+        password: "",
+      },
+      validationSchema,
+      onSubmit: (values) => {
+        // Handle form submission here
+      },
+    });
 
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
@@ -47,7 +53,7 @@ const Login = () => {
                 Simplify your workflow and boost your productivity
               </p>
 
-              <form action="" className="flex flex-col gap-4">
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <input
                   className="p-2 mt-8 rounded-xl border-2 border-black "
                   value={values.username}
@@ -57,6 +63,9 @@ const Login = () => {
                   type="text"
                   placeholder="Username"
                 />
+                {touched.username && errors.username && (
+                  <div className="text-red-500">{errors.username}</div>
+                )}
                 <div className="relative">
                   <input
                     className="p-2 rounded-xl border-2 border-black w-full"
@@ -75,6 +84,7 @@ const Login = () => {
                     className="bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer "
                     viewBox="0 0 16 16"
                     onClick={togglePasswordVisibility}
+                    title={showPassword ? "Hide Password" : "Show Password"}
                   >
                     <path
                       d={
@@ -91,12 +101,18 @@ const Login = () => {
                     )}
                   </svg>
                 </div>
+                {touched.password && errors.password && (
+                  <div className="text-red-500">{errors.password}</div>
+                )}
                 <div className="text-xs py-2 text-black">
                   <Link to={"/forgot-password"}>
                     <button>Forgot your password?</button>
                   </Link>
                 </div>
-                <button className="bg-[#6A241C] rounded-xl text-white py-2 hover:scale-105 duration-300">
+                <button
+                  type="submit"
+                  className="bg-[#6A241C] rounded-xl text-white py-2 hover:scale-105 duration-300"
+                >
                   Login
                 </button>
               </form>

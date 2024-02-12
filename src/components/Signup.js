@@ -2,21 +2,31 @@ import React, { useState } from "react";
 import { LOGIN_BG_LOGO, LOGIN_BG_URL } from "../utils/constants";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
+import validationSchema from "../utils/validationSchema";
 
 const SignUp = () => {
-  const { values, handleChange, handleBlur, handleSubmit } = useFormik({
-    initialValues: {
-      firstName: "",
-      lastName: "",
-      password: "",
-      confirmPassword: "",
-      userType: "", // Set initial value to an empty string
-    },
-    onSubmit: (values) => {
-      // Handle form submission logic here
-      console.log(values);
-    },
-  });
+  const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
+    useFormik({
+      initialValues: {
+        firstName: "",
+        lastName: "",
+        password: "",
+        confirmPassword: "",
+        userType: "", // Set initial value to an empty string
+      },
+      validationSchema,
+      onSubmit: (values) => {
+        // Handle form submission logic here
+        // Example: Make an API request
+        // axios.post('/api/form', values)
+        //   .then(response => {
+        //     console.log("Form submitted successfully:", response.data);
+        //   })
+        //   .catch(error => {
+        //     console.error("Error submitting form:", error);
+      },
+    });
+
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -56,6 +66,9 @@ const SignUp = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
+                {touched.firstName && errors.firstName && (
+                  <div className="text-red-500">{errors.firstName}</div>
+                )}
                 <input
                   className="p-2 rounded-xl border-2 border-black"
                   type="text"
@@ -65,6 +78,9 @@ const SignUp = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
+                {touched.lastName && errors.lastName && (
+                  <div className="text-red-500">{errors.lastName}</div>
+                )}
                 <div className="relative">
                   <input
                     className="p-2 rounded-xl border-2 border-black w-full"
@@ -83,6 +99,7 @@ const SignUp = () => {
                     className="bi bi-eye absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer"
                     viewBox="0 0 16 16"
                     onClick={togglePasswordVisibility}
+                    title={showPassword ? "Hide Password" : "Show Password"}
                   >
                     <path
                       d={
@@ -99,6 +116,9 @@ const SignUp = () => {
                     )}
                   </svg>
                 </div>
+                {touched.password && errors.password && (
+                  <div className="text-red-500">{errors.password}</div>
+                )}
                 <input
                   className="p-2 rounded-xl border-2 border-black"
                   type="password"
@@ -108,6 +128,9 @@ const SignUp = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                 />
+                {touched.confirmPassword && errors.confirmPassword && (
+                  <div className="text-red-500">{errors.confirmPassword}</div>
+                )}
                 <select
                   className="p-2 rounded-xl border-2 border-black"
                   name="userType"
@@ -120,6 +143,9 @@ const SignUp = () => {
                   <option value="Manager">Manager</option>
                   <option value="Employee">Employee</option>
                 </select>
+                {touched.userType && errors.userType && (
+                  <div className="text-red-500">{errors.userType}</div>
+                )}
                 <button
                   type="submit"
                   className="bg-[#6A241C] rounded-xl text-white py-2 hover:scale-105 duration-300"
