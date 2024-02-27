@@ -1,9 +1,9 @@
-import Body from "./components/Body";
+import Index from "./components/Index";
 
 function App() {
   return (
     <div className="App">
-      <Body />
+      <Index />
     </div>
   );
 }
