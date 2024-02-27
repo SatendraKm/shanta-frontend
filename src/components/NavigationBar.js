@@ -14,7 +14,7 @@ import { IoIosLogOut } from "react-icons/io";
 const NavigationBar = () => {
   const location = useLocation();
   return (
-    <div className="bg-white w-2/12 h-screen px-2  flex flex-col">
+    <div className="bg-white w-max-20 h-screen px-2  flex flex-col ">
       <div className="p-2 flex justify-center ">
         <img src={AppLogo} alt="Logo" className="w-[230px]" />
       </div>
@@ -35,9 +35,9 @@ const NavigationBar = () => {
           <p className="px-1 text-sm">Home</p>
         </Link>
         <Link
-          to={"/dashboard/form1"}
+          to={"/dashboard/AddCustomer"}
           className={`flex items-center p-2 w-full hover:bg-[#6a241c]  rounded-md hover:text-white${
-            location.pathname === "/dashboard/form1"
+            location.pathname === "/dashboard/AddCustomer"
               ? "w-full bg-[#6a241c]  rounded-md text-white"
               : ""
           }`}

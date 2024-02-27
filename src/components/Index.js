@@ -5,7 +5,7 @@ import Home from "./Home";
 import Header from "./Header";
 import NavigationBar from "./NavigationBar";
 import SignUp from "./Signup";
-import Form1 from "./Form1";
+import AddCustomer from "./AddCustomer";
 import Form2 from "./Form2";
 import Form3 from "./Form3";
 import Form4 from "./Form4";
@@ -28,13 +28,13 @@ const Index = () => {
 const ProtectedRoutes = () => {
   return (
     <>
-      <div className="flex flex-row bg-white ">
+      <div className="flex flex-row bg-white  h-screen overflow-hidden">
         <NavigationBar />
-        <div className="w-screen">
+        <div className="flex-auto overflow-auto scrollbar-hide">
           <Header />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/form1" element={<Form1 />} />
+            <Route path="/AddCustomer" element={<AddCustomer />} />
             <Route path="/form2" element={<Form2 />} />
             <Route path="/form3" element={<Form3 />} />
             <Route path="/form4" element={<Form4 />} />

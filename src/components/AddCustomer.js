@@ -3,7 +3,7 @@ import validationSchemaForm from "../utils/validationSchemaForm";
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
-const Form1 = () => {
+const AddCustomer = () => {
   const formFields = [
     {
       name: "customerName",
@@ -100,51 +100,60 @@ const Form1 = () => {
         <Link to={"/dashboard"} className="opacity-60">
           Dashboard
         </Link>
-        <Link to={"/dashboard/Form1"}>Form1</Link>
+        <Link to={"/dashboard/AddCustomer"}>Add Customer</Link>
       </Breadcrumbs>
-      <div className="px-8 w-full">
-        <div className="px-2">
-          <h2 className="font-bold text-2xl text-[#6A241C]">Form1</h2>
-          <h4>Form Description</h4>
-        </div>
-        <form
-          onSubmit={handleSubmit}
-          className="m-2 gap-4 gap-y-2 pl-16 grid grid-cols-2 w-3/4 justify-center items-center"
-        >
-          {formFields.map((field) => (
-            <div key={field.name}>
-              <div className="flex flex-col">
-                <label htmlFor={field.label} className="block text-gray-500">
-                  {field.label}
-                </label>
-                <input
-                  className="p-2 rounded-md border border-1 w-72 border-gray-500"
-                  type={field.type}
-                  name={field.name}
-                  id={field.name}
-                  placeholder={field.placeholder}
-                  value={values[field.name]}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              </div>
-              {touched[field.name] && errors[field.name] && (
-                <div className="text-red-500 text-xs px-2">
-                  {errors[field.name]}
+      <div className=" lg:flex lg:items-center w-100% lg:justify-between">
+        <div className="px-4 lg:px-8 w-100% lg:w-100%">
+          <div className="px-2">
+            <h2 className="font-bold text-2xl text-[#6A241C]">
+              Add a new Customer
+            </h2>
+            <h4>Please fill out the following Details</h4>
+          </div>
+          <div className="w-100%">
+            <form
+              onSubmit={handleSubmit}
+              className="p-4 w-100% grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+            >
+              {formFields.map((field) => (
+                <div key={field.name}>
+                  <div className="flex flex-col m-2 items-start">
+                    <label
+                      htmlFor={field.label}
+                      className="block text-gray-500"
+                    >
+                      {field.label}
+                    </label>
+                    <input
+                      className="p-2 rounded-md border border-1 w-full lg:w-72 border-gray-500"
+                      type={field.type}
+                      name={field.name}
+                      id={field.name}
+                      placeholder={field.placeholder}
+                      value={values[field.name]}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    />
+                  </div>
+                  {touched[field.name] && errors[field.name] && (
+                    <div className="text-red-500 text-xs px-2">
+                      {errors[field.name]}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
-          <button
-            type="submit"
-            className="bg-[#6A241C] col-span-2 w-1/4 mt-4 self-center rounded-xl text-white p-2 hover:scale-105 duration-300"
-          >
-            Submit
-          </button>
-        </form>
+              ))}
+              <button
+                type="submit"
+                className="bg-[#6A241C] lg:col-span-2 md:col-span-2 w-1/2 lg:w-1/4 md:w-1/4  m-auto rounded-xl text-white p-2 hover:scale-105 duration-300"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default Form1;
+export default AddCustomer;
