@@ -6,26 +6,33 @@ import { useFormik } from "formik";
 import validationSchemaLoginSignup from "../utils/validationSchemaLoginSignup";
 
 const SignUp = () => {
+  const initialValues = {
+    firstName: "",
+    lastName: "",
+    password: "",
+    confirmPassword: "",
+    userType: "", // Set initial value to an empty string
+  };
+
+  const onSubmit = (values) => {
+    // Handle form submission logic here
+    console.log("Submitting form...", values);
+
+    // Example: Make an API request
+    // axios.post('/api/form', values)
+    //   .then(response => {
+    //     console.log("Form submitted successfully:", response.data);
+    //   })
+    //   .catch(error => {
+    //     console.error("Error submitting form:", error);
+    //   });
+  };
+
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
     useFormik({
-      initialValues: {
-        firstName: "",
-        lastName: "",
-        password: "",
-        confirmPassword: "",
-        userType: "", // Set initial value to an empty string
-      },
+      initialValues,
       validationSchema: validationSchemaLoginSignup,
-      onSubmit: (values) => {
-        // Handle form submission logic here
-        // Example: Make an API request
-        // axios.post('/api/form', values)
-        //   .then(response => {
-        //     console.log("Form submitted successfully:", response.data);
-        //   })
-        //   .catch(error => {
-        //     console.error("Error submitting form:", error);
-      },
+      onSubmit,
     });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -99,6 +106,7 @@ const SignUp = () => {
                     />
                     <button
                       className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-600"
+                      type="button"
                       onClick={togglePasswordVisibility}
                     >
                       {showPassword ? (

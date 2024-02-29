@@ -6,12 +6,12 @@ import Header from "./Header";
 import NavigationBar from "./NavigationBar";
 import SignUp from "./Signup";
 import AddCustomer from "./AddCustomer";
-import Form2 from "./Form2";
-import Form3 from "./Form3";
+import CustomerDetails from "./CustomerDetails";
+import BillEntry from "./BillEntry";
 import Form4 from "./Form4";
-import Form5 from "./Form5";
+import BankDetails from "./BankDetails";
 // import Form4 from "./Form4";
-// import Form5 from "./Form5";
+// import BankDetails from "./BankDetails";
 
 const Index = () => {
   return (
@@ -35,12 +35,12 @@ const ProtectedRoutes = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/AddCustomer" element={<AddCustomer />} />
-            <Route path="/form2" element={<Form2 />} />
-            <Route path="/form3" element={<Form3 />} />
+            <Route path="/CustomerDetails" element={<CustomerDetails />} />
+            <Route path="/BillEntry" element={<BillEntry />} />
             <Route path="/form4" element={<Form4 />} />
-            <Route path="/form5" element={<Form5 />} />
+            <Route path="/BankDetails" element={<BankDetails />} />
             {/* <Route path="/form4" element={<Form4 />} />
-            <Route path="/form5" element={<Form5 />} /> */}
+            <Route path="/BankDetails" element={<BankDetails />} /> */}
             {/* Define other dashboard routes here */}
           </Routes>
         </div>

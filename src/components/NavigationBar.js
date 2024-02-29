@@ -1,20 +1,24 @@
 import React from "react";
 import AppLogo from "../utils/images/AppLogo.png";
 import { Link, useLocation } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
+import { IoHomeOutline } from "react-icons/io5";
+import { IoPersonAddOutline } from "react-icons/io5";
 import { MdOutlinePersonPin } from "react-icons/md";
-import { IoPersonAddSharp } from "react-icons/io5";
-import { LuPackageCheck } from "react-icons/lu";
-import { FaMoneyBillTransfer } from "react-icons/fa6";
+import { LiaMoneyBillWaveSolid } from "react-icons/lia";
 import { BsBank } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoIosLogOut } from "react-icons/io";
+import { RiBillLine } from "react-icons/ri";
 
-const NavigationBar = () => {
+const NavigationBar = ({ isNavVisible }) => {
   const location = useLocation();
   return (
-    <div className="bg-white w-max-20 h-screen px-2  flex flex-col ">
+    <div
+      className={`bg-white w-max-20 h-screen px-2 flex flex-col ${
+        isNavVisible ? "" : "hidden md:flex lg:flex"
+      }`}
+    >
       <div className="p-2 flex justify-center ">
         <img src={AppLogo} alt="Logo" className="w-[230px]" />
       </div>
@@ -30,7 +34,7 @@ const NavigationBar = () => {
               : ""
           }`}
         >
-          <FaHome />
+          <IoHomeOutline />
 
           <p className="px-1 text-sm">Home</p>
         </Link>
@@ -42,27 +46,27 @@ const NavigationBar = () => {
               : ""
           }`}
         >
-          <IoPersonAddSharp />
+          <IoPersonAddOutline />
 
           <p className="px-1 text-sm">Add Customer</p>
         </Link>
         <Link
-          to={"/dashboard/form3"}
+          to={"/dashboard/BillEntry"}
           className={`flex items-center p-2 w-full hover:bg-[#6a241c]  rounded-md hover:text-white${
-            location.pathname === "/dashboard/form3"
+            location.pathname === "/dashboard/BillEntry"
               ? "w-full bg-[#6a241c]  rounded-md text-white"
               : ""
           }`}
         >
-          <LuPackageCheck />
+          <RiBillLine />
 
-          <p className="px-1 text-sm">Goods Verification</p>
+          <p className="px-1 text-sm">Bill Entry</p>
         </Link>
 
         <Link
-          to={"/dashboard/form2"}
+          to={"/dashboard/CustomerDetails"}
           className={`flex items-center p-2 w-full hover:bg-[#6a241c]  rounded-md hover:text-white${
-            location.pathname === "/dashboard/form2"
+            location.pathname === "/dashboard/CustomerDetails"
               ? "w-full bg-[#6a241c]  rounded-md text-white"
               : ""
           }`}
@@ -79,14 +83,14 @@ const NavigationBar = () => {
               : ""
           }`}
         >
-          <FaMoneyBillTransfer />
+          <LiaMoneyBillWaveSolid />
 
           <p className="px-1 text-sm">Payments</p>
         </Link>
         <Link
-          to={"/dashboard/form5"}
+          to={"/dashboard/BankDetails"}
           className={`flex items-center p-2 w-full hover:bg-[#6a241c]  rounded-md hover:text-white${
-            location.pathname === "/dashboard/form5"
+            location.pathname === "/dashboard/BankDetails"
               ? "w-full bg-[#6a241c]  rounded-md text-white"
               : ""
           }`}

@@ -4,55 +4,55 @@ import validationSchemaForm from "../utils/validationSchemaForm";
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
-const Form3 = () => {
+const BankDetails = () => {
   const formFields = [
     {
-      name: "customerName",
-      placeholder: "Enter Customer Name",
+      name: "bankName",
+      placeholder: "Enter Bank Name",
       type: "text",
-      label: "Customer Name",
+      label: "Bank Name",
     },
     {
-      name: "itemSummary",
-      placeholder: "Enter Item Description",
+      name: "accountName",
+      placeholder: "Enter Account Name",
       type: "text",
-      label: "Item Description",
+      label: "Account Name",
     },
     {
-      name: "billNumber",
-      placeholder: "Enter Bill Number",
+      name: "accountNumber",
+      placeholder: "Enter Account Number",
       type: "text",
-      label: "Bill Number",
+      label: "Account Number",
     },
     {
-      name: "billDate",
-      placeholder: "(dd/mm/yyyy)",
+      name: "IFSC",
+      placeholder: "Enter IFSC code",
       type: "text",
-      label: "Date of Billing",
+      label: "IFSC",
     },
     {
-      name: "billReceivingDate",
-      placeholder: "(dd/mm/yyyy)",
+      name: "checkBookNumber",
+      placeholder: "Enter Checkbook Number",
       type: "text",
-      label: "Date of receiving Bill",
+      label: "Checkbook Number",
     },
     {
-      name: "documentEntryNumber",
-      placeholder: "Enter Document Entry Number",
+      name: "chequeNumber",
+      placeholder: "Enter cheque Number",
       type: "text",
-      label: "Document Entry Number",
+      label: "Cheque Number",
     },
     {
-      name: "totalBillAmount",
-      placeholder: "Enter Total Amount",
+      name: "chequeDate",
+      placeholder: "Enter cheque Date",
       type: "text",
-      label: "Total Amount (in ₹)",
+      label: "Cheque Date",
     },
     {
-      name: "remark",
-      placeholder: "Remarks (if any)",
+      name: "chequeAmount",
+      placeholder: "Enter cheque Amount",
       type: "text",
-      label: "Remarks",
+      label: "Cheque Amount",
     },
   ];
 
@@ -68,13 +68,6 @@ const Form3 = () => {
   } = useFormik({
     initialValues: {
       customerName: "",
-      itemSummary: "",
-      billNumber: "",
-      billDate: "",
-      billReceivingDate: "", // Initialize billReceivingDate with the same value as billDate
-      documentEntryNumber: "",
-      totalBillAmount: "",
-      remark: "",
     },
     validationSchema: validationSchemaForm,
     onSubmit: (values) => {
@@ -95,11 +88,11 @@ const Form3 = () => {
         <Link to={"/dashboard"} className="opacity-60">
           Dashboard
         </Link>
-        <Link to={"/dashboard/Form3"}>Form3</Link>
+        <Link to={"/dashboard/BillEntry"}>BankDetails</Link>
       </Breadcrumbs>
       <div className="px-8 w-full">
         <div className="px-2">
-          <h2 className="font-bold text-2xl  text-[#6A241C]">Form3</h2>
+          <h2 className="font-bold text-2xl  text-[#6A241C]">BankDetails</h2>
           <h4>Form Description</h4>
         </div>
         <form
@@ -134,7 +127,7 @@ const Form3 = () => {
           ))}
           <button
             type="submit"
-            className="bg-[#6A241C] w-1/4 mt-4 self-center rounded-xl text-white p-2 hover:scale-105 duration-300"
+            className="bg-[#6A241C] w-1/4 mt-4 self-center col-span-2 rounded-xl text-white p-2 hover:scale-105 duration-300"
           >
             Submit
           </button>
@@ -144,4 +137,4 @@ const Form3 = () => {
   );
 };
 
-export default Form3;
+export default BankDetails;

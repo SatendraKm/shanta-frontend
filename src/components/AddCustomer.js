@@ -73,29 +73,43 @@ const AddCustomer = () => {
     },
   ];
 
+  const initialValues = {
+    customerName: "",
+    address: "",
+    contactNumber: "",
+    email: "",
+    gstin: "",
+    panNumber: "",
+    bankName: "",
+    accountNumber: "",
+    accountName: "",
+    ifscCode: "",
+    branchName: "",
+  };
+  const onSubmit = async (values, { resetForm }) => {
+    try {
+      // Perform any async operations here, such as API requests
+      console.log("Submitting form...", values);
+
+      // Simulate an async operation with setTimeout
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Reset the form after successful submission
+      resetForm();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
     useFormik({
-      initialValues: {
-        customerName: "",
-        address: "",
-        contactNumber: "",
-        email: "",
-        gstin: "",
-        panNumber: "",
-        bankName: "",
-        accountNumber: "",
-        accountName: "",
-        ifscCode: "",
-        branchName: "",
-      },
+      initialValues,
       validationSchema: validationSchemaForm,
-      onSubmit: (values) => {
-        // Handle form submission logic here
-      },
+      onSubmit,
     });
 
   return (
-    <div className="">
+    <>
       <Breadcrumbs>
         <Link to={"/dashboard"} className="opacity-60">
           Dashboard
@@ -134,12 +148,12 @@ const AddCustomer = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
+                    {touched[field.name] && errors[field.name] && (
+                      <div className="text-red-500 text-xs px-2">
+                        {errors[field.name]}
+                      </div>
+                    )}
                   </div>
-                  {touched[field.name] && errors[field.name] && (
-                    <div className="text-red-500 text-xs px-2">
-                      {errors[field.name]}
-                    </div>
-                  )}
                 </div>
               ))}
               <button
@@ -152,7 +166,7 @@ const AddCustomer = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

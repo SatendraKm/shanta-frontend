@@ -7,23 +7,47 @@ import validationSchemaLoginSignup from "../utils/validationSchemaLoginSignup";
 
 const Login = () => {
   const navigate = useNavigate();
+  const initialValues = {
+    username: "",
+    password: "",
+  };
+
+  const onSubmit = (values) => {
+    try {
+      // Hardcoded credentials for dummy authentication
+      const hardcodedCredentials = {
+        username: "sagarkm1010",
+        password: "123456789",
+      };
+
+      // Compare the form values with the hardcoded credentials
+      if (
+        values.username === hardcodedCredentials.username &&
+        values.password === hardcodedCredentials.password
+      ) {
+        console.log("Submitting form...", values);
+        // Navigate to dashboard upon successful submission
+        navigate("/dashboard");
+      } else {
+        console.log("Authentication failed: Invalid username or password");
+        // Handle authentication failure (e.g., show error message)
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // Handle any other errors that may occur during form submission
+    }
+  };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
-      initialValues: {
-        username: "",
-        password: "",
-      },
-      validationSchema: validationSchemaLoginSignup,
-      onSubmit: (values) => {
-        // Handle form submission here
-        navigate("/dashboard");
-      },
+      initialValues,
+      validationSchemaLoginSignup,
+      onSubmit,
     });
   const [showPassword, setShowPassword] = useState(false);
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
-
   return (
     <div>
       <div className="relative">
@@ -80,6 +104,7 @@ const Login = () => {
                       onBlur={handleBlur}
                     />
                     <button
+                      type="button"
                       className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-600"
                       onClick={togglePasswordVisibility}
                     >
@@ -127,20 +152,18 @@ const Login = () => {
                     </div>
                   )}
                 </div>
-                <div className="text-xs px-2 text-black">
+                <div className="text-xs mt-3 px-2 text-black">
                   <Link to={"/forgot-password"}>
                     <button>Forgot your password?</button>
                   </Link>
                 </div>
+                <button
+                  type="submit"
+                  className="bg-[#6A241C] rounded-xl mt-4 ml-14 text-white w-1/2  py-2 hover:scale-105 duration-300"
+                >
+                  Login
+                </button>
               </form>
-              {/**temporary change for presentation */}
-              <div className="justify-center">
-                <Link to={"/dashboard"}>
-                  <button className="bg-[#6A241C] rounded-xl mt-4 ml-14 text-white w-1/2  py-2 hover:scale-105 duration-300">
-                    Login
-                  </button>
-                </Link>
-              </div>
 
               <div className="mt-6 grid grid-cols-3 items-center text-gray-400">
                 <hr className="border-gray-400" />
