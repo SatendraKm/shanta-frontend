@@ -1,118 +1,182 @@
 import React, { useState } from "react";
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
+import jsPDF from "jspdf";
 
 const Payments = () => {
-  // const data = [
-  //   {
-  //     customerName: "Jane Cooper",
-  //     totalOutstanding: "₹ 5000",
-  //     payingToday: "₹ 3000",
-  //     totalAmountRemaining: "₹ 4100",
-  //   },
-  //   {
-  //     customerName: "Floyd Miles",
-  //     totalOutstanding: "₹ 5000",
-  //     payingToday: "₹ 5000",
-  //     totalAmountRemaining: "₹ 1230",
-  //   },
-  //   {
-  //     customerName: "Ronald Richards",
-  //     totalOutstanding: "₹ 5000",
-  //     payingToday: "₹ 5000",
-  //     totalAmountRemaining: "₹ 7896",
-  //   },
-  //   {
-  //     customerName: "Marvin McKinney",
-  //     totalOutstanding: "₹ 5000",
-  //     payingToday: "₹ 5000",
-  //     totalAmountRemaining: "₹ 7531",
-  //   },
-  //   {
-  //     customerName: "Jerome Bell",
-  //     totalOutstanding: "₹ 5000",
-  //     payingToday: "₹ 5000",
-  //     totalAmountRemaining: "₹ 9874",
-  //   },
-  //   {
-  //     customerName: "Kathryn Murphy",
-  //     totalOutstanding: "₹ 5000",
-  //     payingToday: "₹ 5000",
-  //     totalAmountRemaining: "₹ 45632",
-  //   },
-  //   {
-  //     customerName: "Jacob Jones",
-  //     totalOutstanding: "₹ 5000",
-  //     payingToday: "₹ 5000",
-  //     totalAmountRemaining: "₹ 741089",
-  //   },
-  //   {
-  //     customerName: "Kristin Watson",
-  //     totalOutstanding: "₹ 5000",
-  //     payingToday: "₹ 5000",
-  //     totalAmountRemaining: "₹ 321456",
-  //   },
-  // ];
-  const [payingToday, setPayingToday] = useState({
-    "Jane Cooper": "₹ 3000",
-    "Floyd Miles": "₹ 5000",
-    "Ronald Richards": "₹ 5000",
-    "Marvin McKinney": "₹ 5000",
-    "Jerome Bell": "₹ 5000",
-    "Kathryn Murphy": "₹ 5000",
-    "Jacob Jones": "₹ 5000",
-    "Kristin Watson": "₹ 5000",
-  });
-  const handleChange = (customerName, value) => {
-    setPayingToday({ ...payingToday, [customerName]: value });
+  // Sample data for payments
+  const [payments, setPayments] = useState([
+    {
+      id: 1,
+      customerName: "Customer A",
+      denNo: "DEN1",
+      billNo: "001",
+      billAmt: 1000,
+      paymentDate: "2024-02-28",
+      paidAmt: 500,
+      runningBalance: 500,
+      isSelected: false,
+    },
+    {
+      id: 2,
+      customerName: "Customer B",
+      denNo: "DEN2",
+      billNo: "002",
+      billAmt: 1500,
+      paymentDate: "2024-02-27",
+      paidAmt: 1500,
+      runningBalance: 0,
+      isSelected: false,
+    },
+  ]);
+
+  // Handler to update paid amount and running balance
+  const handlePaidAmountChange = (event, id) => {
+    const updatedPayments = payments.map((payment) =>
+      payment.id === id
+        ? {
+            ...payment,
+            paidAmt: parseInt(event.target.value),
+            runningBalance: payment.billAmt - parseInt(event.target.value),
+          }
+        : payment
+    );
+    setPayments(updatedPayments);
   };
+
+  // Handler to toggle selection of a customer
+  const toggleSelection = (id) => {
+    const updatedPayments = payments.map((payment) =>
+      payment.id === id
+        ? { ...payment, isSelected: !payment.isSelected }
+        : payment
+    );
+    setPayments(updatedPayments);
+  };
+
+  // Handler to export selected customers data to PDF
+  const exportToPDF = () => {
+    const selectedCustomers = payments.filter((payment) => payment.isSelected);
+    const doc = new jsPDF();
+    doc.text("Selected Customers Data", 10, 10);
+    let yPos = 20;
+    selectedCustomers.forEach((customer, index) => {
+      doc.text(
+        `${index + 1}. Customer Name: ${customer.customerName}`,
+        10,
+        yPos
+      );
+      yPos += 5;
+      doc.text(`   DEN No.: ${customer.denNo}`, 10, yPos);
+      yPos += 5;
+      doc.text(`   Bill No.: ${customer.billNo}`, 10, yPos);
+      yPos += 5;
+      doc.text(`   Bill AMT: ${customer.billAmt}`, 10, yPos);
+      yPos += 5;
+      doc.text(`   Payment Date: ${customer.paymentDate}`, 10, yPos);
+      yPos += 5;
+      doc.text(`   Paid AMT: ${customer.paidAmt}`, 10, yPos);
+      yPos += 5;
+      doc.text(`   Running Balance: ${customer.runningBalance}`, 10, yPos);
+      yPos += 10; // Increase vertical spacing between customers
+    });
+    doc.save("selected_customers_data.pdf");
+  };
+
   return (
     <>
       <Breadcrumbs>
         <Link to={"/dashboard"} className="opacity-60">
           Dashboard
         </Link>
-        <Link to={"/dashboard/Payments"}>Payments</Link>
+        <span>Payments</span>
       </Breadcrumbs>
+      <div className="px-4 lg:px-6 py-3">
+        <h1 className="font-bold text-2xl   text-[#6A241C]">Payments</h1>
+        <h3 className="mb-2">
+          Enter the amount to be paid and select customer to export their data
+        </h3>
+        <button
+          onClick={exportToPDF}
+          className="bg-[#6A241C] text-white px-4 py-2 rounded-md mb-4"
+        >
+          Export Selected Customers to PDF
+        </button>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            {/* Table headers */}
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Select
+                </th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Customer Name
+                </th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  DEN No.
+                </th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Bill No.
+                </th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Bill AMT
+                </th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Payment Date
+                </th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Paid AMT
+                </th>
+                <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Running Balance
+                </th>
+              </tr>
+            </thead>
 
-      <table className="min-w-full">
-        <thead>
-          <tr>
-            <th className="px-6 py-3 bg-gray-500 text-left text-xs leading-4 font-medium text-white uppercase tracking-wider">
-              Customer Name
-            </th>
-            <th className="px-6 py-3 bg-gray-500 text-left text-xs leading-4 font-medium text-white uppercase tracking-wider">
-              Total Outstanding
-            </th>
-            <th className="px-6 py-3 bg-gray-500 text-left text-xs leading-4 font-medium text-white uppercase tracking-wider">
-              Paying Today
-            </th>
-            <th className="px-6 py-3 bg-gray-500 text-left text-xs leading-4 font-medium text-white uppercase tracking-wider">
-              Total Amount Remaining
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white">
-          {Object.entries(payingToday).map(([customerName, value], index) => (
-            <tr
-              key={index}
-              className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
-            >
-              <td className="px-6 py-4 whitespace-no-wrap">{customerName}</td>
-              <td className="px-6 py-4 whitespace-no-wrap">₹ 5000</td>
-              <td className="px-6 py-4 whitespace-no-wrap">
-                <input
-                  type="text"
-                  value={value}
-                  onChange={(e) => handleChange(customerName, e.target.value)}
-                  className="border rounded px-2 py-1"
-                />
-              </td>
-              <td className="px-6 py-4 whitespace-no-wrap">₹ 5000</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            {/* Table body */}
+            <tbody className="bg-white divide-y divide-gray-200">
+              {payments.map((payment, index) => (
+                <tr key={index}>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    <input
+                      type="checkbox"
+                      checked={payment.isSelected}
+                      onChange={() => toggleSelection(payment.id)}
+                    />
+                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    {payment.customerName}
+                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    {payment.denNo}
+                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    {payment.billNo}
+                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    {payment.billAmt}
+                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    {payment.paymentDate}
+                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    <input
+                      type="number"
+                      value={payment.paidAmt}
+                      onChange={(e) => handlePaidAmountChange(e, payment.id)}
+                      className="p-1 rounded-md border border-gray-300"
+                    />
+                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">
+                    {payment.runningBalance}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </>
   );
 };

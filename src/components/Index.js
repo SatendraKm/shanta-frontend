@@ -8,9 +8,9 @@ import SignUp from "./Signup";
 import AddCustomer from "./AddCustomer";
 import CustomerDetails from "./CustomerDetails";
 import BillEntry from "./BillEntry";
-import Form4 from "./Form4";
+import Payments from "./Payments";
 import BankDetails from "./BankDetails";
-// import Form4 from "./Form4";
+// import Payments from "./Payments";
 // import BankDetails from "./BankDetails";
 
 const Index = () => {
@@ -37,9 +37,9 @@ const ProtectedRoutes = () => {
             <Route path="/AddCustomer" element={<AddCustomer />} />
             <Route path="/CustomerDetails" element={<CustomerDetails />} />
             <Route path="/BillEntry" element={<BillEntry />} />
-            <Route path="/form4" element={<Form4 />} />
+            <Route path="/Payments" element={<Payments />} />
             <Route path="/BankDetails" element={<BankDetails />} />
-            {/* <Route path="/form4" element={<Form4 />} />
+            {/* <Route path="/Payments" element={<Payments />} />
             <Route path="/BankDetails" element={<BankDetails />} /> */}
             {/* Define other dashboard routes here */}
           </Routes>

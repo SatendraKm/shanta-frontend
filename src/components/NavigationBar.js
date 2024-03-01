@@ -76,9 +76,9 @@ const NavigationBar = ({ isNavVisible }) => {
           <p className="px-1 text-sm">Customer Details</p>
         </Link>
         <Link
-          to={"/dashboard/form4"}
+          to={"/dashboard/Payments"}
           className={`flex items-center p-2 w-full hover:bg-[#6a241c]  rounded-md hover:text-white${
-            location.pathname === "/dashboard/form4"
+            location.pathname === "/dashboard/Payments"
               ? "w-full bg-[#6a241c]  rounded-md text-white"
               : ""
           }`}
@@ -102,7 +102,7 @@ const NavigationBar = ({ isNavVisible }) => {
       </div>
 
       {/* Profile Settings and Logout */}
-      <div className="mx-1 p-3 border-t-2">
+      <div className="mx-1 p-3 mt-2 border-t-2">
         <button
           className={`flex items-center p-2 w-full hover:bg-[#6a241c]  rounded-md hover:text-white`}
         >
