@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
-const Form4 = () => {
+const Payments = () => {
   // const data = [
   //   {
   //     customerName: "Jane Cooper",
@@ -72,7 +72,7 @@ const Form4 = () => {
         <Link to={"/dashboard"} className="opacity-60">
           Dashboard
         </Link>
-        <Link to={"/dashboard/Form4"}>Form4</Link>
+        <Link to={"/dashboard/Payments"}>Payments</Link>
       </Breadcrumbs>
 
       <table className="min-w-full">
@@ -117,4 +117,4 @@ const Form4 = () => {
   );
 };
 
-export default Form4;
+export default Payments;

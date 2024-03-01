@@ -91,16 +91,16 @@ const BillEntry = () => {
         </Link>
         <Link to={"/dashboard/BillEntry"}>Bill Entry</Link>
       </Breadcrumbs>
-      <div className="lg:flex lg:items-center  lg:justify-between ">
+      <div className="lg:flex lg:items-center lg:justify-between ">
         <div className="px-4 lg:px-8 w-full lg:w-[90%]">
           <div className="px-2">
             <h2 className="font-bold text-2xl text-[#6A241C]">Bill Entry</h2>
             <h4>Please enter the following Details</h4>
           </div>
-          <div className="w-full lg:w-[60%]]">
+          <div className="w-full ">
             <form
               onSubmit={formik.handleSubmit}
-              className="p-4 w-100% grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+              className="p-4 xl:w-3/4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
             >
               {formFields.map((field) => (
                 <div key={field.name}>
