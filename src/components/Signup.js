@@ -4,28 +4,33 @@ import AppLogo from "../utils/images/AppLogo.png";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import validationSchemaLoginSignup from "../utils/validationSchemaLoginSignup";
+import axios from "axios"; // Import Axios for making HTTP requests
 
 const SignUp = () => {
   const initialValues = {
-    firstName: "",
-    lastName: "",
+    username: "",
     password: "",
     confirmPassword: "",
-    userType: "", // Set initial value to an empty string
+    role: "", // Set initial value to an empty string
   };
 
-  const onSubmit = (values) => {
-    // Handle form submission logic here
-    console.log("Submitting form...", values);
+  const onSubmit = async (values) => {
+    try {
+      // Make a POST request to the signup API endpoint
+      const response = await axios.post(
+        "http://44.212.65.125:3000/signup",
+        values
+      );
 
-    // Example: Make an API request
-    // axios.post('/api/form', values)
-    //   .then(response => {
-    //     console.log("Form submitted successfully:", response.data);
-    //   })
-    //   .catch(error => {
-    //     console.error("Error submitting form:", error);
-    //   });
+      // Handle successful response
+      console.log("Form submitted successfully:", response.data);
+
+      // Optionally, redirect users to a different page or show a confirmation message
+    } catch (error) {
+      // Handle errors
+      console.error("Error submitting form:", error);
+      // Optionally, display an error message to the user
+    }
   };
 
   const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
@@ -64,35 +69,18 @@ const SignUp = () => {
                   <input
                     className="p-2 mt-8 w-full rounded-md border-2 border-black"
                     type="text"
-                    name="firstName"
-                    placeholder="First Name"
-                    value={values.firstName}
+                    name="username"
+                    placeholder="Username"
+                    value={values.username}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  {touched.firstName && errors.firstName && (
+                  {touched.username && errors.username && (
                     <div className="text-red-500 text-xs px-2">
-                      {errors.firstName}
+                      {errors.username}
                     </div>
                   )}
                 </div>
-                <div>
-                  <input
-                    className="p-2 rounded-md w-full border-2 border-black"
-                    type="text"
-                    name="lastName"
-                    placeholder="Last Name"
-                    value={values.lastName}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
-                  {touched.lastName && errors.lastName && (
-                    <div className="text-red-500 text-xs px-2">
-                      {errors.lastName}
-                    </div>
-                  )}
-                </div>
-
                 <div>
                   <div className="relative">
                     <input

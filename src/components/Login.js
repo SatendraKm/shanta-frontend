@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { useState } from "react";
 import validationSchemaLoginSignup from "../utils/validationSchemaLoginSignup";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,35 +13,32 @@ const Login = () => {
     password: "",
   };
 
-  const onSubmit = (values) => {
+  const onSubmit = async (values) => {
     try {
-      // Hardcoded credentials for dummy authentication
-      const hardcodedCredentials = {
-        username: "sagarkm1010",
-        password: "123456789",
-      };
+      // Make a POST request to your login API endpoint
+      const response = await axios.post("http://44.212.65.125:3000/signin", {
+        username: values.username,
+        password: values.password,
+      });
 
-      // Compare the form values with the hardcoded credentials
-      if (
-        values.username === hardcodedCredentials.username &&
-        values.password === hardcodedCredentials.password
-      ) {
-        console.log("Submitting form...", values);
-        // Navigate to dashboard upon successful submission
+      // Handle the response from the login API
+      if (response.status === 200) {
+        console.log("Login successful");
+        // Navigate to dashboard upon successful login
         navigate("/dashboard");
       } else {
-        console.log("Authentication failed: Invalid username or password");
-        // Handle authentication failure (e.g., show error message)
+        console.log("Login failed: Invalid username or password");
+        // Handle login failure (e.g., show error message)
       }
     } catch (error) {
-      console.error("Error submitting form:", error);
-      // Handle any other errors that may occur during form submission
+      console.error("Error logging in:", error);
+      // Handle any other errors that may occur during login
     }
   };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
     useFormik({
       initialValues,
-      validationSchemaLoginSignup,
+      // validationSchema: validationSchemaLoginSignup,
       onSubmit,
     });
   const [showPassword, setShowPassword] = useState(false);
