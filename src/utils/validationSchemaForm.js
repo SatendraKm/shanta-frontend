@@ -1,30 +1,24 @@
 import * as Yup from "yup";
 
 const validationSchemaForm = Yup.object().shape({
-  customerName: Yup.string().required("Customer name is required"),
+  name: Yup.string().required("Customer name is required"),
   address: Yup.string(),
-  contactNumber: Yup.string()
+  contactNos: Yup.string()
     .matches(/^\d{10}$/, "Contact number must be exactly 10 digits")
     .required("Contact number is required"),
-  contactNumber2: Yup.string().matches(
+  contactNos2: Yup.string().matches(
     /^\d{10}$/,
     "Contact number must be exactly 10 digits"
   ),
   email: Yup.string().email("Invalid email"),
-  gstin: Yup.string().matches(/^([A-Z0-9]{15})$/, "Invalid GSTIN format"),
-  panNumber: Yup.string().matches(
-    /^([A-Z]{5}[0-9]{4}[A-Z]{1})$/,
-    "Invalid PAN format"
-  ),
+  gstinPan: Yup.string().required("GSTIN/PAN is required"),
+
   bankName: Yup.string().required("Bank name is required"),
-  accountNumber: Yup.string()
-    .matches(
-      /^\d{9,12}$/,
-      "Bank account number must be between 9 and 12 digits"
-    )
+  accountNo: Yup.string()
+    .matches(/^\d{9,12}$/, "Number must be between 9 and 12 digits")
     .required("Bank account number is required"),
   accountName: Yup.string().required("Bank account name is required"),
-  ifscCode: Yup.string()
+  ifsc: Yup.string()
     .matches(/^[A-Za-z]{4}\d{7}$/, "Invalid IFSC code format")
     .required("IFSC code is required"),
   branchName: Yup.string().required("Branch name is required"),

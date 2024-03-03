@@ -10,6 +10,7 @@ import CustomerDetails from "./CustomerDetails";
 import BillEntry from "./BillEntry";
 import Payments from "./Payments";
 import BankDetails from "./BankDetails";
+import ForgotPassword from "./ForgotPassword";
 // import Payments from "./Payments";
 // import BankDetails from "./BankDetails";
 
@@ -19,6 +20,7 @@ const Index = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/ForgotPassword" element={<ForgotPassword />} />
         <Route path="/dashboard/*" element={<ProtectedRoutes />} />
       </Routes>
     </Router>

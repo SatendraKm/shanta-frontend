@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 
@@ -6,29 +6,23 @@ const CustomerDetails = () => {
   const [filterDen, setFilterDen] = useState(""); // State for DEN number filter
   const [editableFields, setEditableFields] = useState({}); // State for editable fields
 
-  // Sample data for bills
-  const sampleBills = [
-    {
-      customerName: "Customer A",
-      gstinPan: "ABC123456789",
-      billNo: "001",
-      billDate: "2024-02-28",
-      billReceivingDate: "2024-02-28",
-      billEntryDate: "2024-02-28",
-      denNo: "DEN1",
-      totalBillAmt: 1000,
-    },
-    {
-      customerName: "Customer B",
-      gstinPan: "DEF987654321",
-      billNo: "002",
-      billDate: "2024-02-27",
-      billReceivingDate: "2024-02-27",
-      billEntryDate: "2024-02-27",
-      denNo: "DEN2",
-      totalBillAmt: 1500,
-    },
-  ];
+  const [customerData, setCustomerData] = useState([]);
+
+  useEffect(() => {
+    fetchCustomerData();
+  }, []);
+
+  const fetchCustomerData = async () => {
+    try {
+      const response = await fetch(
+        "http://44.212.65.125:3000/api/customers_with_bills"
+      );
+      const data = await response.json();
+      setCustomerData(data.customersWithBills);
+    } catch (error) {
+      console.error("Error fetching customer data:", error);
+    }
+  };
 
   // Handler for filtering based on DEN number
   const handleFilterDen = (event) => {
@@ -100,29 +94,36 @@ const CustomerDetails = () => {
 
             {/* Table body */}
             <tbody className="bg-white divide-y divide-gray-200">
-              {sampleBills
-                .filter((bill) => !filterDen || bill.denNo.includes(filterDen)) // Apply filter based on DEN number
-                .map((bill, index) => (
+              {customerData
+                .filter((customer) =>
+                  customer.den_no
+                    .toLowerCase()
+                    .includes(filterDen.toLowerCase())
+                )
+                .map((customer, index) => (
                   <tr key={index}>
                     <td className="px-3 py-2 whitespace-nowrap">
-                      {bill.customerName}
+                      {customer.name}
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap">
-                      {bill.gstinPan}
+                      {customer.gstinPan}
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap">
-                      {bill.billNo}
+                      {customer.bill_no}
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap">
-                      {bill.billDate}
+                      {customer.bill_date
+                        ? customer.bill_date.substring(0, 10)
+                        : ""}
                     </td>
                     {/* Editable fields */}
                     <td className="px-3 py-2 whitespace-nowrap">
                       <input
                         type="date"
                         value={
-                          editableFields.billReceivingDate ||
-                          bill.billReceivingDate
+                          customer.bill_receiving_date
+                            ? customer.bill_receiving_date.substring(0, 10)
+                            : ""
                         }
                         onChange={(e) =>
                           handleEditableFieldChange(e, "billReceivingDate")
@@ -134,7 +135,9 @@ const CustomerDetails = () => {
                       <input
                         type="date"
                         value={
-                          editableFields.billEntryDate || bill.billEntryDate
+                          customer.bill_receiving_date
+                            ? customer.bill_receiving_date.substring(0, 10)
+                            : ""
                         }
                         onChange={(e) =>
                           handleEditableFieldChange(e, "billEntryDate")
@@ -143,13 +146,16 @@ const CustomerDetails = () => {
                       />
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap">
-                      {bill.denNo}
+                      {customer.den_no}
                     </td>
                     <td className="px-3 py-2 whitespace-nowrap flex items-center">
-                      <p className="px-1">₹</p>
+                      <span className="px-1">₹</span>
                       <input
                         type="text"
-                        value={editableFields.totalBillAmt || bill.totalBillAmt}
+                        value={
+                          editableFields.total_bill_amt ||
+                          customer.total_bill_amt
+                        }
                         onChange={(e) =>
                           handleEditableFieldChange(e, "totalBillAmt")
                         }

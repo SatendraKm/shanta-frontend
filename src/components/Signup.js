@@ -1,49 +1,39 @@
 import React, { useState } from "react";
 import { LOGIN_BG_URL } from "../utils/constants";
 import AppLogo from "../utils/images/AppLogo.png";
-import { Link } from "react-router-dom";
-import { useFormik } from "formik";
-import validationSchemaLoginSignup from "../utils/validationSchemaLoginSignup";
-import axios from "axios"; // Import Axios for making HTTP requests
-
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { useForm } from "react-hook-form";
+import axios from "axios";
 const SignUp = () => {
-  const initialValues = {
-    username: "",
-    password: "",
-    confirmPassword: "",
-    role: "", // Set initial value to an empty string
-  };
-
-  const onSubmit = async (values) => {
-    try {
-      // Make a POST request to the signup API endpoint
-      const response = await axios.post(
-        "http://44.212.65.125:3000/signup",
-        values
-      );
-
-      // Handle successful response
-      console.log("Form submitted successfully:", response.data);
-
-      // Optionally, redirect users to a different page or show a confirmation message
-    } catch (error) {
-      // Handle errors
-      console.error("Error submitting form:", error);
-      // Optionally, display an error message to the user
-    }
-  };
-
-  const { values, errors, touched, handleChange, handleBlur, handleSubmit } =
-    useFormik({
-      initialValues,
-      validationSchema: validationSchemaLoginSignup,
-      onSubmit,
-    });
-
+  const navigate = useNavigate(); // Initialize useNavigate
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    reset, // Add reset function from useForm
+  } = useForm();
   const [showPassword, setShowPassword] = useState(false);
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await axios.post(
+        "http://44.212.65.125:3000/signup",
+        data
+      );
+      console.log("Form submitted successfully:", response.data);
+      reset(); // Reset the form after successful submission
+      navigate("/"); // Navigate to login page
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  const password = watch("password", ""); // Watch the value of the "password" field
 
   return (
     <div>
@@ -64,20 +54,21 @@ const SignUp = () => {
               <h2 className="font-bold text-2xl text-[#6A241C]">
                 Welcome to shanta
               </h2>
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-4"
+              >
                 <div>
                   <input
                     className="p-2 mt-8 w-full rounded-md border-2 border-black"
                     type="text"
                     name="username"
                     placeholder="Username"
-                    value={values.username}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
+                    {...register("username", { required: true })}
                   />
-                  {touched.username && errors.username && (
+                  {errors.username && (
                     <div className="text-red-500 text-xs px-2">
-                      {errors.username}
+                      Username is required.
                     </div>
                   )}
                 </div>
@@ -88,9 +79,7 @@ const SignUp = () => {
                       type={showPassword ? "text" : "password"}
                       name="password"
                       placeholder="Password"
-                      value={values.password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
+                      {...register("password", { required: true })}
                     />
                     <button
                       className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-600"
@@ -135,9 +124,9 @@ const SignUp = () => {
                       )}
                     </button>
                   </div>
-                  {touched.password && errors.password && (
+                  {errors.password && (
                     <div className="text-red-500 text-xs px-2">
-                      {errors.password}
+                      Password is required.
                     </div>
                   )}
                 </div>
@@ -147,33 +136,33 @@ const SignUp = () => {
                     type="password"
                     name="confirmPassword"
                     placeholder="Confirm Password"
-                    value={values.confirmPassword}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
+                    {...register("confirmPassword", {
+                      required: true,
+                      validate: (value) =>
+                        value === password || "Passwords do not match",
+                    })}
                   />
-                  {touched.confirmPassword && errors.confirmPassword && (
+                  {errors.confirmPassword && (
                     <div className="text-red-500 text-xs px-2">
-                      {errors.confirmPassword}
+                      {errors.confirmPassword.message}
                     </div>
                   )}
                 </div>
                 <div>
                   <select
                     className="p-2 rounded-md w-full border-2 border-black"
-                    name="userType"
-                    value={values.userType}
-                    onChange={handleChange}
+                    name="role"
+                    {...register("role", { required: true })}
                   >
                     <option value="" disabled>
                       Select User
                     </option>
-                    <option value="Manager">Manager</option>
-                    <option value="Employee">Employee</option>
+                    <option value="01">primary</option>
+                    <option value="02">secondary</option>
                   </select>
-
-                  {touched.userType && errors.userType && (
+                  {errors.role && (
                     <div className="text-red-500 text-xs px-2">
-                      {errors.userType}
+                      Role is required.
                     </div>
                   )}
                 </div>

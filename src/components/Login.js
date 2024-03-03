@@ -1,24 +1,25 @@
 import { LOGIN_BG_URL } from "../utils/constants";
 import AppLogo from "../utils/images/AppLogo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
 import { useState } from "react";
-import validationSchemaLoginSignup from "../utils/validationSchemaLoginSignup";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-  const initialValues = {
-    username: "",
-    password: "",
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (data) => {
     try {
       // Make a POST request to your login API endpoint
       const response = await axios.post("http://44.212.65.125:3000/signin", {
-        username: values.username,
-        password: values.password,
+        username: data.username,
+        password: data.password,
       });
 
       // Handle the response from the login API
@@ -35,17 +36,11 @@ const Login = () => {
       // Handle any other errors that may occur during login
     }
   };
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
-    useFormik({
-      initialValues,
-      // validationSchema: validationSchemaLoginSignup,
-      onSubmit,
-    });
-  const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   return (
     <div>
       <div className="relative">
@@ -73,33 +68,34 @@ const Login = () => {
                 Simplify your workflow and boost your productivity
               </p>
 
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="flex flex-col gap-4"
+              >
                 <div className="h-20">
                   <input
+                    {...register("username", {
+                      required: "Username is required",
+                    })}
                     className="p-2 mt-8 rounded-xl w-full border-2 border-black "
-                    value={values.username}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    id="username"
                     type="text"
                     placeholder="Username"
                   />
-                  {touched.username && errors.username && (
+                  {errors.username && (
                     <div className="text-red-500 text-xs px-2">
-                      {errors.username}
+                      {errors.username.message}
                     </div>
                   )}
                 </div>
                 <div className="h-12">
                   <div className="relative">
                     <input
+                      {...register("password", {
+                        required: "Password is required",
+                      })}
                       className="p-2 rounded-xl border-2 border-black w-full"
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
-                      id="password"
-                      value={values.password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
                     />
                     <button
                       type="button"
@@ -144,14 +140,14 @@ const Login = () => {
                       )}
                     </button>
                   </div>
-                  {touched.password && errors.password && (
+                  {errors.password && (
                     <div className="text-red-500 text-xs px-2">
-                      {errors.password}
+                      {errors.password.message}
                     </div>
                   )}
                 </div>
                 <div className="text-xs mt-3 px-2 text-black">
-                  <Link to={"/forgot-password"}>
+                  <Link to={"/ForgotPassword"}>
                     <p>Forgot your password?</p>
                   </Link>
                 </div>

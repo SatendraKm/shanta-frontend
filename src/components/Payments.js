@@ -8,7 +8,7 @@ const Payments = () => {
   const [payments, setPayments] = useState([
     {
       id: 1,
-      customerName: "Customer A",
+      name: "Customer A",
       denNo: "DEN1",
       billNo: "001",
       billAmt: 1000,
@@ -19,7 +19,7 @@ const Payments = () => {
     },
     {
       id: 2,
-      customerName: "Customer B",
+      name: "Customer B",
       denNo: "DEN2",
       billNo: "002",
       billAmt: 1500,
@@ -61,11 +61,7 @@ const Payments = () => {
     doc.text("Selected Customers Data", 10, 10);
     let yPos = 20;
     selectedCustomers.forEach((customer, index) => {
-      doc.text(
-        `${index + 1}. Customer Name: ${customer.customerName}`,
-        10,
-        yPos
-      );
+      doc.text(`${index + 1}. Customer Name: ${customer.name}`, 10, yPos);
       yPos += 5;
       doc.text(`   DEN No.: ${customer.denNo}`, 10, yPos);
       yPos += 5;
@@ -146,7 +142,7 @@ const Payments = () => {
                     />
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap">
-                    {payment.customerName}
+                    {payment.name}
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap">
                     {payment.denNo}
