@@ -1,17 +1,12 @@
 import { useState, useEffect } from "react";
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
 
 const BillEntry = () => {
   const [customerNames, setCustomerNames] = useState([]);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
@@ -30,7 +25,31 @@ const BillEntry = () => {
     }
   };
 
-  const onSubmit = async (values) => {
+  const initialValues = {
+    name: "",
+    itemSummary: "",
+    billNo: "",
+    billDate: "",
+    billReceivingDate: "",
+    denNo: "",
+    totalBillAmount: "",
+    remark: "",
+    itemMatched: false,
+  };
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required("Customer Name is required"),
+    itemSummary: Yup.string().required("Item Summary is required"),
+    billNo: Yup.string().required("Bill No. is required"),
+    billDate: Yup.date().required("Bill Date is required"),
+    billReceivingDate: Yup.date().required("Bill Receiving Date is required"),
+    denNo: Yup.string().required("DEN No. is required"),
+    totalBillAmount: Yup.number().required("Total Bill Amount is required"),
+    remark: Yup.string(),
+    itemMatched: Yup.boolean(),
+  });
+
+  const onSubmit = async (values, { resetForm }) => {
     try {
       const response = await axios.post(
         "http://44.212.65.125:3000/api/customers_bill",
@@ -38,7 +57,7 @@ const BillEntry = () => {
       );
       console.log("Customer bill entry added successfully:", response.data);
       setShowAlert(true);
-      reset();
+      resetForm();
     } catch (error) {
       console.error("Error adding customer bill entry:", error);
     }
@@ -111,100 +130,102 @@ const BillEntry = () => {
             <h4>Please enter the following Details</h4>
           </div>
           <div className="w-full">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="p-4 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={onSubmit}
             >
-              <div className="flex flex-col m-2 items-start">
-                <label htmlFor="name" className="block text-gray-500">
-                  Customer Name
-                </label>
-                <select
-                  {...register("name", {
-                    required: "Customer Name is required",
-                  })}
-                  className="p-2 rounded-md border border-1 w-full lg:w-72 border-gray-500"
-                  id="name"
-                >
-                  <option value="" disabled>
-                    Select Customer Name
-                  </option>
-                  {customerNames.map((customer) => (
-                    <option key={customer.id} value={customer.id}>
-                      {customer.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.name && (
-                  <div className="text-red-500 text-xs px-2">
-                    {errors.name.message}
-                  </div>
-                )}
-              </div>
-              {formFields.map((field) => (
-                <div key={field.name} className="flex flex-col m-2 items-start">
-                  {field.type !== "checkbox" && (
-                    <label htmlFor={field.name} className="block text-gray-500">
-                      {field.label}
+              {({ isSubmitting }) => (
+                <Form className="p-4 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                  <div className="flex flex-col m-2 items-start">
+                    <label htmlFor="name" className="block text-gray-500">
+                      Customer Name
                     </label>
-                  )}
-                  {field.type === "select" && (
-                    <select
-                      {...register("name", {
-                        required: "Customer Name is required",
-                      })}
+                    <Field
+                      as="select"
+                      name="name"
                       className="p-2 rounded-md border border-1 w-full lg:w-72 border-gray-500"
-                      id="name"
                     >
                       <option value="" disabled>
-                        {field.placeholder}
+                        Select Customer Name
                       </option>
                       {customerNames.map((customer) => (
                         <option key={customer.id} value={customer.id}>
                           {customer.name}
                         </option>
                       ))}
-                    </select>
-                  )}
-                  {field.type === "checkbox" && (
-                    <div className="flex items-center">
-                      <input
-                        {...register(field.name)}
-                        type={field.type}
-                        id={field.name}
-                        name={field.name}
-                        className="form-checkbox h-5 w-5 focus:outline-none"
-                      />
-                      <span className="ml-2 text-gray-500">{field.label}</span>
-                    </div>
-                  )}
-                  {field.type !== "select" && field.type !== "checkbox" && (
-                    <input
-                      {...register(field.name, {
-                        required: `${field.label} is required`,
-                      })}
-                      className="p-2 rounded-md border border-1 w-full lg:w-72 border-gray-500"
-                      type={field.type}
-                      name={field.name}
-                      id={field.name}
-                      placeholder={field.placeholder}
+                    </Field>
+                    <ErrorMessage
+                      name="name"
+                      component="div"
+                      className="text-red-500 text-xs px-2"
                     />
-                  )}
-                  {errors[field.name] && (
-                    <div className="text-red-500 text-xs px-2">
-                      {errors[field.name].message}
-                    </div>
-                  )}
-                </div>
-              ))}
+                  </div>
 
-              <button
-                type="submit"
-                className="bg-[#6A241C] lg:col-span-2 md:col-span-2 w-1/4 m-auto rounded-xl text-white p-2 hover:scale-105 duration-300"
-              >
-                Submit
-              </button>
-            </form>
+                  {/* Add similar Field components for other form fields */}
+                  {formFields.map((field) => (
+                    <div
+                      key={field.name}
+                      className="flex flex-col m-2 items-start"
+                    >
+                      {field.type !== "checkbox" && (
+                        <label
+                          htmlFor={field.name}
+                          className="block text-gray-500"
+                        >
+                          {field.label}
+                        </label>
+                      )}
+                      {field.type === "checkbox" ? (
+                        <div className="flex items-center">
+                          <Field
+                            type="checkbox"
+                            name={field.name}
+                            id={field.name}
+                            className="form-checkbox h-5 w-5 focus:outline-none"
+                          />
+                          <label
+                            htmlFor={field.name}
+                            className="ml-2 text-gray-500"
+                          >
+                            {field.label}
+                          </label>
+                        </div>
+                      ) : field.type === "textarea" ? (
+                        <Field
+                          as="textarea"
+                          type={field.type}
+                          name={field.name}
+                          id={field.name}
+                          placeholder={field.placeholder}
+                          className="p-2 rounded-md border border-1 w-full lg:w-72 border-gray-500"
+                        />
+                      ) : (
+                        <Field
+                          type={field.type}
+                          name={field.name}
+                          id={field.name}
+                          placeholder={field.placeholder}
+                          className="p-2 rounded-md border border-1 w-full lg:w-72 border-gray-500"
+                        />
+                      )}
+                      <ErrorMessage
+                        name={field.name}
+                        component="div"
+                        className="text-red-500 text-xs px-2"
+                      />
+                    </div>
+                  ))}
+                  <button
+                    type="submit"
+                    className="bg-[#6A241C] lg:col-span-2 md:col-span-2 w-1/4 m-auto rounded-xl text-white p-2 hover:scale-105 duration-300"
+                    disabled={isSubmitting}
+                  >
+                    Submit
+                  </button>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>

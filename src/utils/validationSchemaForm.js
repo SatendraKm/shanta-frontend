@@ -6,20 +6,18 @@ const validationSchemaForm = Yup.object().shape({
   contactNos: Yup.string()
     .matches(/^\d{10}$/, "Contact number must be exactly 10 digits")
     .required("Contact number is required"),
-  contactNos2: Yup.string().matches(
-    /^\d{10}$/,
-    "Contact number must be exactly 10 digits"
-  ),
-  email: Yup.string().email("Invalid email"),
-  gstinPan: Yup.string().required("GSTIN/PAN is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  gstinPan: Yup.string()
+    .matches(/^[a-zA-Z0-9]{10,15}$/, "Invalid GSTIN/PAN number")
+    .required("GSTIN/PAN number is required"),
 
   bankName: Yup.string().required("Bank name is required"),
   accountNo: Yup.string()
-    .matches(/^\d{9,12}$/, "Number must be between 9 and 12 digits")
-    .required("Bank account number is required"),
+    .matches(/^\d{9,12}$/, "Account number must be between 9 and 12 digits")
+    .required("Account number is required"),
   accountName: Yup.string().required("Bank account name is required"),
   ifsc: Yup.string()
-    .matches(/^[A-Za-z]{4}\d{7}$/, "Invalid IFSC code format")
+    .matches(/^[a-zA-Z0-9]{11}$/, "Invalid IFSC code")
     .required("IFSC code is required"),
   branchName: Yup.string().required("Branch name is required"),
   itemSummary: Yup.string().required("Item summary is required"),

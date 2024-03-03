@@ -1,8 +1,41 @@
 import { useState } from "react";
 import { Breadcrumbs } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import axios from "axios";
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string().required("Customer name is required"),
+  address: Yup.string(),
+  contactNos: Yup.string()
+    .matches(/^\d{10}$/, "Contact number must be exactly 10 digits")
+    .required("Contact number is required"),
+  email: Yup.string().email("Invalid email"),
+  gstinPan: Yup.string().required("GSTIN/PAN is required"),
+  bankName: Yup.string().required("Bank name is required"),
+  accountNo: Yup.string()
+    .matches(/^\d{9,12}$/, "Number must be between 9 and 12 digits")
+    .required("Bank account number is required"),
+  accountName: Yup.string().required("Bank account name is required"),
+  ifsc: Yup.string()
+    .matches(/^[A-Za-z]{4}\d{7}$/, "Invalid IFSC code format")
+    .required("IFSC code is required"),
+  branchName: Yup.string().required("Branch name is required"),
+});
+
+const initialValues = {
+  name: "",
+  address: "",
+  contactNos: "",
+  email: "",
+  gstinPan: "",
+  bankName: "",
+  accountNo: "",
+  accountName: "",
+  ifsc: "",
+  branchName: "",
+};
 
 const AddCustomer = () => {
   const formFields = [
@@ -67,16 +100,9 @@ const AddCustomer = () => {
       label: "Branch name",
     },
   ];
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
   const [showAlert, setShowAlert] = useState(false);
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (values, { resetForm }) => {
     try {
       // Make POST request to add customer
       const response = await axios.post(
@@ -91,7 +117,7 @@ const AddCustomer = () => {
       setShowAlert(true);
 
       // Reset form
-      reset();
+      resetForm();
     } catch (error) {
       console.error("Error adding customer:", error);
     }
@@ -118,39 +144,48 @@ const AddCustomer = () => {
             <h4>Please fill out the following Details</h4>
           </div>
           <div className="w-full">
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="p-4 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4"
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={onSubmit}
             >
-              {formFields.map((field) => (
-                <div key={field.name} className="flex flex-col m-2 items-start">
-                  <label htmlFor={field.name} className="block text-gray-500">
-                    {field.label}
-                  </label>
-                  <input
-                    {...register(field.name, {
-                      required: `${field.label} is required`,
-                    })}
-                    className="p-2 rounded-md border border-1 w-full lg:w-72 border-gray-500"
-                    type={field.type}
-                    name={field.name}
-                    id={field.name}
-                    placeholder={field.placeholder}
-                  />
-                  {errors[field.name] && (
-                    <div className="text-red-500 text-xs px-2">
-                      {errors[field.name].message}
+              {({ isSubmitting }) => (
+                <Form className="p-4 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                  {formFields.map((field) => (
+                    <div
+                      key={field.name}
+                      className="flex flex-col m-2 items-start"
+                    >
+                      <label
+                        htmlFor={field.name}
+                        className="block text-gray-500"
+                      >
+                        {field.label}
+                      </label>
+                      <Field
+                        type={field.type}
+                        name={field.name}
+                        id={field.name}
+                        placeholder={field.placeholder}
+                        className="p-2 rounded-md border border-1 w-full lg:w-72 border-gray-500"
+                      />
+                      <ErrorMessage
+                        name={field.name}
+                        component="div"
+                        className="text-red-500 text-xs px-2"
+                      />
                     </div>
-                  )}
-                </div>
-              ))}
-              <button
-                type="submit"
-                className="bg-[#6A241C] lg:col-span-2 md:col-span-2 w-1/4 m-auto rounded-xl text-white p-2 hover:scale-105 duration-300"
-              >
-                Submit
-              </button>
-            </form>
+                  ))}
+                  <button
+                    type="submit"
+                    className="bg-[#6A241C] lg:col-span-2 md:col-span-2 w-1/4 m-auto rounded-xl text-white p-2 hover:scale-105 duration-300"
+                    disabled={isSubmitting}
+                  >
+                    Submit
+                  </button>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>
