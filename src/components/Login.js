@@ -165,10 +165,10 @@ const Login = () => {
                 <hr className="border-gray-400" />
               </div>
 
-              <div className="mt-3 text-xs flex justify-between items-center text-[#6A241C]">
+              <div className="mt-3 text-xs flex justify-between items-center text-black">
                 <p>Don't have an account?</p>
                 <Link to={"/signup"}>
-                  <button className="py-2 px-5 bg-white border rounded-xl hover:scale-110 duration-300">
+                  <button className="py-2 text-[#6A241C] px-5 bg-white border rounded-xl hover:scale-110 duration-300">
                     Register
                   </button>
                 </Link>
