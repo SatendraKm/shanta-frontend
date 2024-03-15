@@ -1,9 +1,11 @@
+import { useContext } from "react";
 import { LOGIN_BG_URL } from "../utils/constants";
 import AppLogo from "../utils/images/AppLogo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { AuthContext } from "../utils/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,7 +14,13 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const { setIsAuthenticated } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true); // Set authenticated state
+    navigate("/dashboard"); // Redirect to dashboard
+  };
 
   const onSubmit = async (data) => {
     try {
@@ -24,9 +32,7 @@ const Login = () => {
 
       // Handle the response from the login API
       if (response.status === 200) {
-        console.log("Login successful");
-        // Navigate to dashboard upon successful login
-        navigate("/dashboard");
+        handleLoginSuccess();
       } else {
         console.log("Login failed: Invalid username or password");
         // Handle login failure (e.g., show error message)

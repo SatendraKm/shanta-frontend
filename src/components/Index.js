@@ -11,23 +11,32 @@ import BillEntry from "./BillEntry";
 import Payments from "./Payments";
 import BankDetails from "./BankDetails";
 import ForgotPassword from "./ForgotPassword";
-// import Payments from "./Payments";
-// import BankDetails from "./BankDetails";
+import { AuthProvider } from "../utils/AuthContext"; // Import the AuthProvider
+import PrivateRoute from "./PrivateRoute";
 
 const Index = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/ForgotPassword" element={<ForgotPassword />} />
-        <Route path="/dashboard/*" element={<ProtectedRoutes />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/ForgotPassword" element={<ForgotPassword />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 
-const ProtectedRoutes = () => {
+const Dashboard = () => {
   return (
     <>
       <div className="flex flex-row bg-white  h-screen overflow-hidden">

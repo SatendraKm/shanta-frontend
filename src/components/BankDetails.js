@@ -119,7 +119,7 @@ const BankDetails = () => {
               setIsDialogOpen(true);
               setDialogMode("add");
             }}
-            className="bg-[#6A241C] mt-2 text-white px-4 py-2 rounded-md mb-4"
+            className="bg-[#6A241C] mt-2 font-mono text-white px-4 py-2 rounded-md mb-4"
           >
             Add New Bank Account
           </button>
@@ -179,13 +179,13 @@ const BankDetails = () => {
                   <td className="px-3 py-2 whitespace-nowrap">
                     <button
                       onClick={() => handleEdit(bank)}
-                      className="text-white hover:bg-[#6A241C] bg-[#862e24] rounded-md p-1 m-0.5"
+                      className="text-white font-mono hover:bg-[#6A241C] bg-[#862e24] rounded-md p-1 m-0.5"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(bank.id)}
-                      className="text-white hover:bg-red-600 bg-red-500 rounded-md p-1 m-0.5"
+                      className="text-white font-mono hover:bg-red-600 bg-red-500 rounded-md p-1 m-0.5"
                     >
                       Delete
                     </button>
