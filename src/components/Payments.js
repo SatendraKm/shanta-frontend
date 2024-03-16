@@ -16,13 +16,13 @@ const Payments = () => {
       totalBillAmt: 2500, // Updated to be the sum of all bill amounts
       bills: [
         {
-          billNo: "001",
+          billNo: "1. ",
           billAmt: 1000,
           paymentDate: "2024-02-28",
           paidAmt: 0,
         },
         {
-          billNo: "002",
+          billNo: "2. ",
           billAmt: 1500,
           paymentDate: "2024-02-27",
           paidAmt: 0,
@@ -38,13 +38,13 @@ const Payments = () => {
       totalBillAmt: 1800, // Updated to be the sum of all bill amounts
       bills: [
         {
-          billNo: "003",
+          billNo: "3. ",
           billAmt: 800,
           paymentDate: "2024-03-01",
           paidAmt: 0,
         },
         {
-          billNo: "004",
+          billNo: "4. ",
           billAmt: 1000,
           paymentDate: "2024-02-29",
           paidAmt: 0,
@@ -103,23 +103,23 @@ const Payments = () => {
   };
 
   // Handler to select/deselect a bill
-  const handleBillSelection = (customerId, billIndex) => {
-    setSelectedBills((prevSelectedBills) => {
-      const customerBills = prevSelectedBills[customerId] || [];
-      const isSelected = customerBills.includes(billIndex);
-
-      if (isSelected) {
-        return {
-          ...prevSelectedBills,
-          [customerId]: customerBills.filter((index) => index !== billIndex),
-        };
-      } else {
-        return {
-          ...prevSelectedBills,
-          [customerId]: [...customerBills, billIndex],
-        };
-      }
-    });
+  const handleAccordionSelection = (customerId) => {
+    if (selectedBills[customerId]?.length > 0) {
+      // Deselect all bills if any bill is selected
+      setSelectedBills((prevSelectedBills) => ({
+        ...prevSelectedBills,
+        [customerId]: [],
+      }));
+    } else {
+      // Select all bills if no bill is selected
+      const allBillsIndexes = [
+        ...Array(payments[customerId - 1].bills.length).keys(),
+      ];
+      setSelectedBills((prevSelectedBills) => ({
+        ...prevSelectedBills,
+        [customerId]: allBillsIndexes,
+      }));
+    }
   };
 
   // Handler to export selected bills data to Excel
@@ -189,9 +189,19 @@ const Payments = () => {
                 className="flex justify-between items-center bg-gray-100 p-4 rounded-lg cursor-pointer font-mono"
                 onClick={() => toggleBillDetails(payment.id)}
               >
-                <div>{payment.name}</div>
                 <div>
-                  Total Bill Amount: ${payment.totalBillAmt}
+                  <input
+                    type="checkbox"
+                    checked={selectedBills[payment.id]?.length > 0}
+                    onChange={() => handleAccordionSelection(payment.id)}
+                    className="mr-2"
+                  />
+                  <span className="font-bold">{payment.id}.</span>{" "}
+                  {payment.name} | IFSC: {payment.ifsc} | A/C No.:{" "}
+                  {payment.accountNo} | Bank Name: {payment.bankName} | Total
+                  Amount: ${payment.totalBillAmt}
+                </div>
+                <div>
                   {expandedCustomer === payment.id ? (
                     <FaChevronUp className="inline ml-2" />
                   ) : (
@@ -199,15 +209,13 @@ const Payments = () => {
                   )}
                 </div>
               </div>
+
               {expandedCustomer === payment.id && (
                 <div className="border border-gray-200 p-4 rounded-lg mt-2">
                   <h4 className="font-bold text-lg mb-2">Bill Details</h4>
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Select
-                        </th>
                         <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Bill No.
                         </th>
@@ -220,26 +228,11 @@ const Payments = () => {
                         <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                           Paid Amount
                         </th>
-                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                          Running Balance
-                        </th>
                       </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
                       {payment.bills.map((bill, index) => (
                         <tr key={index}>
-                          <td className="px-3 py-2 whitespace-nowrap">
-                            <input
-                              type="checkbox"
-                              checked={
-                                selectedBills[payment.id]?.includes(index) ||
-                                false
-                              }
-                              onChange={() =>
-                                handleBillSelection(payment.id, index)
-                              }
-                            />
-                          </td>
                           <td className="px-3 py-2 whitespace-nowrap">
                             {bill.billNo}
                           </td>
@@ -259,9 +252,6 @@ const Payments = () => {
                               }
                               className="p-1 rounded-md border border-gray-300"
                             />
-                          </td>
-                          <td className="px-3 py-2 whitespace-nowrap">
-                            ₹{bill.runningBalance}
                           </td>
                         </tr>
                       ))}

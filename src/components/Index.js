@@ -11,28 +11,17 @@ import BillEntry from "./BillEntry";
 import Payments from "./Payments";
 import BankDetails from "./BankDetails";
 import ForgotPassword from "./ForgotPassword";
-import { AuthProvider } from "../utils/AuthContext"; // Import the AuthProvider
-import PrivateRoute from "./PrivateRoute";
 
 const Index = () => {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/ForgotPassword" element={<ForgotPassword />} />
-          <Route
-            path="/dashboard"
-            element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/ForgotPassword" element={<ForgotPassword />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+      </Routes>
+    </Router>
   );
 };
 
@@ -50,9 +39,6 @@ const Dashboard = () => {
             <Route path="/BillEntry" element={<BillEntry />} />
             <Route path="/Payments" element={<Payments />} />
             <Route path="/BankDetails" element={<BankDetails />} />
-            {/* <Route path="/Payments" element={<Payments />} />
-            <Route path="/BankDetails" element={<BankDetails />} /> */}
-            {/* Define other dashboard routes here */}
           </Routes>
         </div>
       </div>

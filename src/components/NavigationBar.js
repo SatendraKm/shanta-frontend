@@ -115,12 +115,14 @@ const NavigationBar = ({ isNavVisible }) => {
           <IoSettingsOutline />
           <p className="px-2 text-sm">Settings</p>
         </button>
-        <button
-          className={`flex items-center p-2 w-full hover:bg-[#6a241c]  rounded-md hover:text-white`}
-        >
-          <IoIosLogOut />
-          <p className="px-2 text-sm">Logout</p>
-        </button>
+        <Link to={"/"}>
+          <button
+            className={`flex items-center p-2 w-full hover:bg-[#6a241c]  rounded-md hover:text-white`}
+          >
+            <IoIosLogOut />
+            <p className="px-2 text-sm">Logout</p>
+          </button>
+        </Link>
       </div>
     </div>
   );
